@@ -40,6 +40,7 @@ type DeployHandlerConfig struct {
 	FxWatcherPort     int
 	FxMeshPort        int
 	SecretMountPath   string
+	AuthURL           string
 }
 
 /* ValidateDeployRequest validates that the service name is valid for Kubernetes */
@@ -59,6 +60,7 @@ func Deploy(req *pb.CreateFunctionRequest, clientset *kubernetes.Clientset, conf
 	if err := ValidateServiceName(req.Service); err != nil {
 		return status.Error(codes.InvalidArgument, err.Error())
 	}
+
 	log.Printf("Deploying... \ndeploy handler config:%+v\n create function request:%+v\n", config, req)
 
 	existingSecrets, err := getSecrets(clientset, config.FunctionNamespace, req.Secrets)
@@ -165,7 +167,7 @@ func makeDeploymentSpec(req *pb.CreateFunctionRequest, existingSecrets map[strin
 
 	initialReplicas := int32p(initialReplicasCount)
 	labels := map[string]string{
-		"openfx_fn": req.Service,
+		"faas_fn": req.Service,
 	}
 
 	if req.Labels != nil {
@@ -206,7 +208,7 @@ func makeDeploymentSpec(req *pb.CreateFunctionRequest, existingSecrets map[strin
 		Spec: v1.DeploymentSpec{
 			Selector: &metav1.LabelSelector{
 				MatchLabels: map[string]string{
-					"openfx_fn": req.Service,
+					"faas_fn": req.Service,
 				},
 			},
 			Replicas: initialReplicas,
@@ -295,7 +297,7 @@ func makeServiceSpec(req *pb.CreateFunctionRequest, fxWatcherPort int, fxMeshPor
 		Spec: apiv1.ServiceSpec{
 			Type: apiv1.ServiceTypeClusterIP,
 			Selector: map[string]string{
-				"openfx_fn": req.Service,
+				"faas_fn": req.Service,
 			},
 			Ports: []apiv1.ServicePort{
 				{

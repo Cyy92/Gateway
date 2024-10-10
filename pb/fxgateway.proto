@@ -108,6 +108,9 @@ message CreateFunctionRequest {
   int32 MinReplicas = 11;
   int32 MaxReplicas = 12;
   string NodeName = 13;
+  string ServiceName = 14;
+  string ServiceImage = 15;
+  string Token = 16;
 }
 
 message DeleteFunctionRequest {
@@ -126,6 +129,7 @@ message ScaleServiceRequest {
 message InvokeServiceRequest {
   string Service = 1;
   bytes Input = 2;
+  string Token = 3;
 }
 
 message FunctionRequest {

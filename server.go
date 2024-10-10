@@ -105,6 +105,7 @@ func (f *FxGateway) Deploy(c context.Context, s *pb.CreateFunctionRequest) (*pb.
 		FxWatcherPort:     f.conf.FxWatcherPort,
 		FxMeshPort:        f.conf.FxMeshPort,
 		SecretMountPath:   f.conf.SecretMountPath,
+		AuthURL:           f.conf.AuthURL,
 	}
 	err := cmd.Deploy(s, f.kubeClient, deployConfig)
 	if err != nil {

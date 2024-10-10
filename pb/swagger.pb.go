@@ -431,6 +431,15 @@ const (
         },
         "NodeName": {
           "type": "string"
+        },
+	"ServiceName": {
+	  "type": "string"
+	},
+	"ServiceImage": {
+	  "type": "string"
+	},
+	"Token": {
+          "type": "string"
         }
       }
     },
